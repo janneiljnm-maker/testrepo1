@@ -3,14 +3,17 @@ const fs = require("fs");
 const path = require("path");
 
 const port = Number(process.env.PORT) || 8080;
-const filePath = path.join(__dirname, "index.html");
 
 const server = http.createServer((req, res) => {
-  if (req.url !== "/" && req.url !== "/index.html") {
+  const page = req.url === "/" ? "index.html" : req.url.slice(1);
+
+  if (page !== "index.html" && page !== "come-in.html") {
     res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
     res.end("Not found");
     return;
   }
+
+  const filePath = path.join(__dirname, page);
 
   fs.readFile(filePath, "utf8", (error, html) => {
     if (error) {
